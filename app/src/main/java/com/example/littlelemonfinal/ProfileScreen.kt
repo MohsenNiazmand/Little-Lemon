@@ -1,4 +1,4 @@
-package com.example.littlelemonlogin
+package com.example.littlelemonfinal
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -27,9 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 

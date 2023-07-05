@@ -1,8 +1,7 @@
-package com.example.littlelemonlogin
+package com.example.littlelemonfinal
 
 import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,11 +29,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.Navigator
+import com.example.littlelemonfinal.ui.theme.Black
+import com.example.littlelemonfinal.ui.theme.GreenGrayDark
+import com.example.littlelemonfinal.ui.theme.White
+import com.example.littlelemonfinal.ui.theme.Yellow
 
 @Composable
 fun Onboarding(sharedPreferences: SharedPreferences, navController: NavController) {
@@ -65,13 +66,14 @@ fun Onboarding(sharedPreferences: SharedPreferences, navController: NavControlle
             )
         }
 
-        Surface(Modifier.height(120.dp), color = Color.Green) {
+        Surface(Modifier.height(140.dp), color = GreenGrayDark) {
             Box(contentAlignment = Alignment.Center) {
                 Text(
                     text = "Let's get to know you",
                     Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    fontSize = 26.sp
+                    color = White,
+                    fontSize = 30.sp
                 )
             }
         }
@@ -132,10 +134,10 @@ fun Onboarding(sharedPreferences: SharedPreferences, navController: NavControlle
 
 
                 },
-                colors = ButtonDefaults.buttonColors(Color(0xFF495E57)),
+                colors = ButtonDefaults.buttonColors(Yellow),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Register", color = Color(0xFFEDEFEE))
+                Text(text = "Register", color = Black)
             }
 
         }

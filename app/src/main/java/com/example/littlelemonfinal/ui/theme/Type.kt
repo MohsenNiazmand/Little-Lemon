@@ -1,4 +1,4 @@
-package com.example.littlelemonlogin.ui.theme
+package com.example.littlelemonfinal.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
