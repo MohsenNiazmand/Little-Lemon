@@ -30,10 +30,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.littlelemonlogin.ui.theme.LittleLemonLoginTheme
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.http.ContentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private var token = MutableLiveData<String>()
@@ -41,10 +50,35 @@ class MainActivity : ComponentActivity() {
         getSharedPreferences("LittleLemon", MODE_PRIVATE)
     }
 
+    private val client = HttpClient(Android) {
+        install(ContentNegotiation) {
+            json(contentType = ContentType("text", "plain"))
+        }
+    }
+
+    private val menuItemsLiveData = MutableLiveData<List<MenuItemNetwork>>()
+
+    private suspend fun getMenu(): List<MenuItemNetwork> {
+        val response: MenuNetworkData =
+            client.get("https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")
+                .body()
+        return response.menu ?: listOf();
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        token.value=sharedPreferences.getString("userName","");
+        token.value = sharedPreferences.getString("userName", "");
+        lifecycleScope.launch {
+            val menuItems = getMenu();
+            runOnUiThread {
+                menuItemsLiveData.value = menuItems;
+                Toast.makeText(
+                    applicationContext,
+                    menuItemsLiveData.value!!.size.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
 
 
@@ -55,17 +89,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                 }
-                if(token.value?.isNotEmpty()!!){
-                    MyNavigation(sharedPreferences = sharedPreferences, isLogged =true )
-                }else
-                    MyNavigation(sharedPreferences = sharedPreferences, isLogged =false )
-
-
-//                if(token.value?.isNotEmpty()!!){
-//                HomeScreen()
-//                }else{
-//                    Onboarding(sharedPreferences = sharedPreferences)
-//                }
+                if (token.value?.isNotEmpty()!!) {
+                    MyNavigation(sharedPreferences = sharedPreferences, isLogged = true)
+                } else
+                    MyNavigation(sharedPreferences = sharedPreferences, isLogged = false)
             }
         }
     }
@@ -75,42 +102,41 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-private fun  MyNavigation(sharedPreferences: SharedPreferences,isLogged:Boolean){
-    val navController= rememberNavController()
-    if(!isLogged){
-        NavHost(navController = navController, startDestination = OnBoarding.route){
+private fun MyNavigation(sharedPreferences: SharedPreferences, isLogged: Boolean) {
+    val navController = rememberNavController()
+    if (!isLogged) {
+        NavHost(navController = navController, startDestination = OnBoarding.route) {
 
-            composable(OnBoarding.route){
-                Onboarding(sharedPreferences = sharedPreferences,navController=navController)
+            composable(OnBoarding.route) {
+                Onboarding(sharedPreferences = sharedPreferences, navController = navController)
             }
-            composable(Home.route){
+            composable(Home.route) {
                 HomeScreen(navController = navController)
             }
 
-            composable(Profile.route){
-                ProfileScreen(navController=navController, sharedPreferences = sharedPreferences)
+            composable(Profile.route) {
+                ProfileScreen(navController = navController, sharedPreferences = sharedPreferences)
             }
 
 
         }
-    }else{
-        NavHost(navController = navController, startDestination = Home.route){
+    } else {
+        NavHost(navController = navController, startDestination = Home.route) {
 
-            composable(Home.route){
+            composable(Home.route) {
                 HomeScreen(navController = navController)
             }
 
-            composable(Profile.route){
+            composable(Profile.route) {
                 ProfileScreen(navController = navController, sharedPreferences = sharedPreferences)
             }
-            composable(OnBoarding.route){
-                Onboarding(sharedPreferences = sharedPreferences,navController=navController)
+            composable(OnBoarding.route) {
+                Onboarding(sharedPreferences = sharedPreferences, navController = navController)
             }
 
         }
 
     }
-
 
 
 }

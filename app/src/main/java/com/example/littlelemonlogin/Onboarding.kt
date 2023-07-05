@@ -37,11 +37,10 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigator
 
 @Composable
-fun Onboarding(sharedPreferences: SharedPreferences,navController: NavController) {
+fun Onboarding(sharedPreferences: SharedPreferences, navController: NavController) {
 
 
-
-    val  mContext= LocalContext.current;
+    val mContext = LocalContext.current;
     var usernameText by remember { mutableStateOf(TextFieldValue("")) }
     var passwordText by remember { mutableStateOf(TextFieldValue("")) }
     var emailText by remember { mutableStateOf(TextFieldValue("")) }
@@ -52,10 +51,12 @@ fun Onboarding(sharedPreferences: SharedPreferences,navController: NavController
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Surface (modifier = Modifier
-            .height(75.dp)
-            .fillMaxWidth()
-            .padding(10.dp)){
+        Surface(
+            modifier = Modifier
+                .height(75.dp)
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
 
             Image(
                 painter = painterResource(id = R.drawable.logo),
@@ -75,41 +76,65 @@ fun Onboarding(sharedPreferences: SharedPreferences,navController: NavController
             }
         }
 
-        Surface(modifier = Modifier.padding(30.dp)){
+        Surface(modifier = Modifier.padding(30.dp)) {
             Box(contentAlignment = Alignment.CenterStart) {
                 Text(text = "Personal information", Modifier.fillMaxWidth())
             }
         }
 
-        OutlinedTextField(value = usernameText, onValueChange = {it-> usernameText=it }, label = ({ Text(text = "Username") }), modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 10.dp))
-        OutlinedTextField(value = passwordText, onValueChange = {it-> passwordText=it }, label = ({ Text(text = "Password") }), modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 10.dp))
-        OutlinedTextField(value = emailText, onValueChange = {it-> emailText=it }, label = ({ Text(text = "Email") }), modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 10.dp))
+        OutlinedTextField(value = usernameText,
+            onValueChange = { it -> usernameText = it },
+            label = ({ Text(text = "Username") }),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+        )
+        OutlinedTextField(value = passwordText,
+            onValueChange = { it -> passwordText = it },
+            label = ({ Text(text = "Password") }),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+        )
+        OutlinedTextField(value = emailText,
+            onValueChange = { it -> emailText = it },
+            label = ({ Text(text = "Email") }),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+        )
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(bottom = 40.dp, start = 20.dp, end = 20.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally,) {
-            Button(onClick = {
+                .padding(bottom = 40.dp, start = 20.dp, end = 20.dp),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Button(
+                onClick = {
 
-            if(usernameText.text.isNotBlank() && passwordText.text.isNotBlank() && emailText.text.isNotBlank()){
-                sharedPreferences.edit().putString("userName",usernameText.text).apply()
-                Toast.makeText(mContext, "Registration successful", Toast.LENGTH_SHORT).show()
-                navController.navigate(Home.route){
-                    popUpTo(0)
-                }
+                    if (usernameText.text.isNotBlank() && passwordText.text.isNotBlank() && emailText.text.isNotBlank()) {
+                        sharedPreferences.edit().putString("userName", usernameText.text).apply()
+                        Toast.makeText(mContext, "Registration successful", Toast.LENGTH_SHORT)
+                            .show()
+                        navController.navigate(Home.route) {
+                            popUpTo(0)
+                        }
 
 
-            }else{
-                Toast.makeText(mContext, "Registration unsuccessful. Please enter all data", Toast.LENGTH_SHORT).show()
-            }
+                    } else {
+                        Toast.makeText(
+                            mContext,
+                            "Registration unsuccessful. Please enter all data",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
 
-            }, colors = ButtonDefaults.buttonColors(Color(0xFF495E57)), modifier = Modifier.fillMaxWidth()) {
+                },
+                colors = ButtonDefaults.buttonColors(Color(0xFF495E57)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = "Register", color = Color(0xFFEDEFEE))
             }
 
