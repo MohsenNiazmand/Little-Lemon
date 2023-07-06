@@ -79,6 +79,8 @@ class MainActivity : ComponentActivity() {
                 val databaseMenuItems by database.menuItemDao().getAll().observeAsState(emptyList())
                 var menuItems= emptyList<MenuItemRoom>()
 
+                menuItems=databaseMenuItems;
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
