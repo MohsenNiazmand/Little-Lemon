@@ -117,6 +117,8 @@ fun Onboarding(sharedPreferences: SharedPreferences, navController: NavControlle
 
                     if (usernameText.text.isNotBlank() && passwordText.text.isNotBlank() && emailText.text.isNotBlank()) {
                         sharedPreferences.edit().putString("userName", usernameText.text).apply()
+                        sharedPreferences.edit().putString("password", passwordText.text).apply()
+                        sharedPreferences.edit().putString("email", emailText.text).apply()
                         Toast.makeText(mContext, "Registration successful", Toast.LENGTH_SHORT)
                             .show()
                         navController.navigate(Home.route) {

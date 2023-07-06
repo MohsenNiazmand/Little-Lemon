@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
@@ -34,15 +33,20 @@ import androidx.navigation.NavController
 @Composable
     fun  ProfileScreen(sharedPreferences: SharedPreferences, navController: NavController){
         val  mContext= LocalContext.current;
-        var firstNameText by remember { mutableStateOf(TextFieldValue("Mohsen")) }
-        var lastnameText by remember { mutableStateOf(TextFieldValue("Niazmand")) }
-        var emailText by remember { mutableStateOf(TextFieldValue("asdas@gmail.com")) }
+        var usernameText by remember { mutableStateOf("") }
+        var passwordText by remember { mutableStateOf("") }
+        var emailText by remember { mutableStateOf("") }
+
         Column(
             Modifier
                 .fillMaxSize()
                 .background(color = Color.White),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            usernameText= sharedPreferences.getString("userName", "").toString()
+            passwordText= sharedPreferences.getString("password", "").toString()
+            emailText= sharedPreferences.getString("email", "").toString()
+
 
             Surface (modifier = Modifier
                 .height(75.dp)
@@ -68,10 +72,10 @@ import androidx.navigation.NavController
                 }
             }
 
-            OutlinedTextField(value = firstNameText, onValueChange = { it-> firstNameText=it }, label = ({ Text(text = "Username") }), modifier = Modifier
+            OutlinedTextField(value = usernameText, onValueChange = { it-> usernameText=it }, label = ({ Text(text = "Username") }), modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp, vertical = 10.dp))
-            OutlinedTextField(value = lastnameText, onValueChange = { it-> lastnameText=it }, label = ({ Text(text = "Password") }), modifier = Modifier
+            OutlinedTextField(value = passwordText, onValueChange = { it-> passwordText=it }, label = ({ Text(text = "Password") }), modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp, vertical = 10.dp))
             OutlinedTextField(value = emailText, onValueChange = {it-> emailText=it }, label = ({ Text(text = "Email") }), modifier = Modifier

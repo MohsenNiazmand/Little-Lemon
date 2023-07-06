@@ -1,10 +1,12 @@
 package com.example.littlelemonfinal
 
 import android.view.MenuItem
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -58,6 +60,9 @@ import com.example.littlelemonfinal.ui.theme.White
 import com.example.littlelemonfinal.ui.theme.Yellow
 import java.util.Locale
 import kotlin.math.log
+import android.content.SharedPreferences
+import com.example.littlelemonfinal.ui.theme.Cream
+import com.example.littlelemonfinal.ui.theme.CreamLight
 
 
 @Composable
@@ -68,6 +73,8 @@ fun HomeScreen(navController: NavController) {
     val database by lazy {
         Room.databaseBuilder(mContext, AppDatabase::class.java, "littleLemon.db").build()
     }
+
+
 
     val databaseMenuItems by database.menuItemDao().getAll().observeAsState(emptyList())
     var menuItems = emptyList<MenuItemRoom>()
@@ -96,6 +103,16 @@ fun HomeScreen(navController: NavController) {
                 contentDescription = "Logo Image",
                 contentScale = ContentScale.Fit
             )
+
+            Row (horizontalArrangement = Arrangement.End){
+                Image(
+                    painter = painterResource(id = R.drawable.profile),
+                    contentDescription = "Profile Image",
+                    Modifier.clickable {
+                        navController.navigate(Profile.route)
+                    }
+                    )
+            }
         }
 
 
@@ -169,10 +186,13 @@ fun HomeScreen(navController: NavController) {
                     Box(
                         Modifier
                             .padding(end = 20.dp, top = 15.dp, bottom = 20.dp)
-                            .background(if(!categoryChecked) Color(0x36424644) else Color.Green, shape = RoundedCornerShape(15.dp))
+                            .background(
+                                if (!categoryChecked) Color(0x36424644) else CreamLight,
+                                shape = RoundedCornerShape(15.dp)
+                            )
                             .clickable {
-                                categoryChecked=!categoryChecked;
-                                orderMenuItems=false;
+                                categoryChecked = !categoryChecked;
+                                orderMenuItems = false;
                             }
                     ) {
                         Text(
