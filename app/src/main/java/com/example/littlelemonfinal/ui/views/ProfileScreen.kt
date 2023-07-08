@@ -1,4 +1,4 @@
-package com.example.littlelemonfinal
+package com.example.littlelemonfinal.ui.views
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -28,6 +28,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.littlelemonfinal.R
+import com.example.littlelemonfinal.ui.navigation.OnBoarding
 
 
 @Composable

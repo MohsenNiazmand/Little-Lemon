@@ -1,5 +1,6 @@
-package com.example.littlelemonfinal
+package com.example.littlelemonfinal.model.data
 
+import com.example.littlelemonfinal.model.services.MenuItemRoom
 import kotlinx.serialization.Serializable
 @Serializable
 data class MenuNetworkData(
@@ -14,5 +15,5 @@ data class MenuItemNetwork (
     val price: String,
     val title: String
 ){
-    fun toMenuItemRoom()=MenuItemRoom(id,category,description,image,price,title)
+    fun toMenuItemRoom()= MenuItemRoom(id,category,description,image,price,title)
 }

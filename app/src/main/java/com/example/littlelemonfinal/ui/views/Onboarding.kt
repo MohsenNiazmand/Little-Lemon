@@ -1,4 +1,4 @@
-package com.example.littlelemonfinal
+package com.example.littlelemonfinal.ui.views
 
 import android.content.SharedPreferences
 import android.widget.Toast
@@ -32,6 +32,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.littlelemonfinal.R
+import com.example.littlelemonfinal.ui.navigation.Home
 import com.example.littlelemonfinal.ui.theme.Black
 import com.example.littlelemonfinal.ui.theme.GreenGrayDark
 import com.example.littlelemonfinal.ui.theme.White

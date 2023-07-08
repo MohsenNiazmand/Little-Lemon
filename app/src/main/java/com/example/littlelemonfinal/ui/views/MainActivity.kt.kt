@@ -1,22 +1,22 @@
-package com.example.littlelemonfinal
+package com.example.littlelemonfinal.ui.views
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import com.example.littlelemonfinal.model.data.MenuItemNetwork
+import com.example.littlelemonfinal.model.data.MenuNetworkData
+import com.example.littlelemonfinal.model.services.AppDatabase
+import com.example.littlelemonfinal.model.services.MenuItemRoom
+import com.example.littlelemonfinal.ui.navigation.AppNavigation
 import com.example.littlelemonfinal.ui.theme.LittleLemonTheme
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -77,9 +77,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             LittleLemonTheme {
                 val databaseMenuItems by database.menuItemDao().getAll().observeAsState(emptyList())
-                var menuItems= emptyList<MenuItemRoom>()
+                var menuItems = emptyList<MenuItemRoom>()
 
-                menuItems=databaseMenuItems;
+                menuItems = databaseMenuItems;
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -87,55 +87,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                 }
                 if (token.value?.isNotEmpty()!!) {
-                    MyNavigation(sharedPreferences = sharedPreferences, isLogged = true)
+                    AppNavigation(sharedPreferences = sharedPreferences, isLogged = true)
                 } else
-                    MyNavigation(sharedPreferences = sharedPreferences, isLogged = false)
+                    AppNavigation(sharedPreferences = sharedPreferences, isLogged = false)
             }
         }
     }
 
 
 }
-
-
-@Composable
-private fun MyNavigation(sharedPreferences: SharedPreferences, isLogged: Boolean) {
-    val navController = rememberNavController()
-    if (!isLogged) {
-        NavHost(navController = navController, startDestination = OnBoarding.route) {
-
-            composable(OnBoarding.route) {
-                Onboarding(sharedPreferences = sharedPreferences, navController = navController)
-            }
-            composable(Home.route) {
-                HomeScreen(navController = navController)
-            }
-
-            composable(Profile.route) {
-                ProfileScreen(navController = navController, sharedPreferences = sharedPreferences)
-            }
-
-
-        }
-    } else {
-        NavHost(navController = navController, startDestination = Home.route) {
-
-            composable(Home.route) {
-                HomeScreen(navController = navController)
-            }
-
-            composable(Profile.route) {
-                ProfileScreen(navController = navController, sharedPreferences = sharedPreferences)
-            }
-            composable(OnBoarding.route) {
-                Onboarding(sharedPreferences = sharedPreferences, navController = navController)
-            }
-
-        }
-
-    }
-
-
-}
-
-

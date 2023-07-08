@@ -1,7 +1,5 @@
-package com.example.littlelemonfinal
+package com.example.littlelemonfinal.ui.views
 
-import android.view.MenuItem
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -28,7 +25,6 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -43,7 +39,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,15 +48,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.littlelemonfinal.R
 import com.example.littlelemonfinal.ui.theme.GrayLight
-import com.example.littlelemonfinal.ui.theme.GrayNormal
 import com.example.littlelemonfinal.ui.theme.GreenGrayDark
 import com.example.littlelemonfinal.ui.theme.White
 import com.example.littlelemonfinal.ui.theme.Yellow
 import java.util.Locale
-import kotlin.math.log
-import android.content.SharedPreferences
-import com.example.littlelemonfinal.ui.theme.Cream
+import com.example.littlelemonfinal.model.services.AppDatabase
+import com.example.littlelemonfinal.model.services.MenuItemRoom
+import com.example.littlelemonfinal.ui.navigation.Profile
 import com.example.littlelemonfinal.ui.theme.CreamLight
 
 
