@@ -49,13 +49,13 @@ import androidx.room.Room
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.littlelemonfinal.R
+import com.example.littlelemonfinal.model.data.MenuItemNetwork
 import com.example.littlelemonfinal.ui.theme.GrayLight
 import com.example.littlelemonfinal.ui.theme.GreenGrayDark
 import com.example.littlelemonfinal.ui.theme.White
 import com.example.littlelemonfinal.ui.theme.Yellow
 import java.util.Locale
 import com.example.littlelemonfinal.model.services.AppDatabase
-import com.example.littlelemonfinal.model.services.MenuItemRoom
 import com.example.littlelemonfinal.ui.navigation.Profile
 import com.example.littlelemonfinal.ui.theme.CreamLight
 
@@ -72,10 +72,10 @@ fun HomeScreen(navController: NavController) {
 
 
     val databaseMenuItems by database.menuItemDao().getAll().observeAsState(emptyList())
-    var menuItems = emptyList<MenuItemRoom>()
+    var menuItems = emptyList<MenuItemNetwork>()
     menuItems = databaseMenuItems;
 
-    var categories=menuItems.map {
+    val categories=menuItems.map {
         it.category
     }
 
@@ -220,7 +220,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun MenuItems(menuItemsRoom: List<MenuItemRoom>) {
+fun MenuItems(menuItemsRoom: List<MenuItemNetwork>) {
     LazyColumn {
         items(menuItemsRoom) { Dish ->
             MenuItems(Dish)
@@ -230,7 +230,7 @@ fun MenuItems(menuItemsRoom: List<MenuItemRoom>) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun MenuItems(dish: MenuItemRoom) {
+fun MenuItems(dish: MenuItemNetwork) {
     Card(Modifier.padding(12.dp), elevation = 0.dp) {
         Row(
             modifier = Modifier
