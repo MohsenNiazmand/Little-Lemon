@@ -5,11 +5,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.littlelemonfinal.model.data.MenuItemNetwork
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MenuItemDao {
     @Query("SELECT * FROM MenuItemNetwork")
-    fun getAll(): LiveData<List<MenuItemNetwork>>
+    fun getAll(): Flow<List<MenuItemNetwork>>
 
     @Insert
     fun insertAll(vararg menuItems: MenuItemNetwork)

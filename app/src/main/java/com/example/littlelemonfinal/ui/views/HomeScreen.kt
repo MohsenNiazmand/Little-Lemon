@@ -1,6 +1,7 @@
 package com.example.littlelemonfinal.ui.views
 
 import android.annotation.SuppressLint
+import android.view.Menu
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +29,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -65,8 +68,17 @@ import com.example.littlelemonfinal.model.services.AppDatabase
 import com.example.littlelemonfinal.ui.navigation.Profile
 import com.example.littlelemonfinal.ui.theme.CreamLight
 import com.example.littlelemonfinal.viewmodel.HomeViewModel
+import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState
+import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.ErrorLoad
+import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.IsLoading
+import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.ShowEmptyState
+import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.ShowToast
+import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.SuccessLoadFromDataBase
+import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.SuccessLoadFromServer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -80,14 +92,36 @@ fun HomeScreen(
     var menuItems = remember {
         mutableStateOf(emptyList<MenuItemNetwork>())
     }
+    //todo
+//    var menuItems: MutableStateFlow<List<MenuItemNetwork>>
     var searchText by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
+    val uiState: HomeScreenState by homeViewModel.mState.collectAsState()
 
+    //todo
+    when (uiState){
+        is IsLoading -> println("loading")
+        is ShowToast -> Toast.makeText(mContext, "Error Happened", Toast.LENGTH_SHORT).show()
+        is ShowEmptyState -> {}
+        is SuccessLoadFromServer -> {}
+        is SuccessLoadFromDataBase ->{}
+        is ErrorLoad ->{}
 
+        else -> {}
+    }
 
+    fun onBackClick(){
 
+    }
 
+    fun getMenuFromDatabase(coroutineScope: CoroutineScope){
+
+        coroutineScope.launch {
+
+//            menuItems.value= homeViewModel.getMenuFromDataBase().observeAsState().value ?: emptyList()
+        }
+    }
 
     Column(
         Modifier
@@ -95,11 +129,11 @@ fun HomeScreen(
             .background(color = Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-            menuItems.value= homeViewModel.getMenuFromDataBase().observeAsState().value ?: emptyList()
-        if(homeViewModel.menuItemsLiveData.observeAsState().value?.isEmpty() == true){
-            homeViewModel.fetchMenuFromServer()
-            menuItems.value = homeViewModel.menuItemsLiveData.observeAsState().value ?: emptyList()
-        }
+//            menuItems.value= homeViewModel.getMenuFromDataBase().observeAsState().value ?: emptyList()
+//        if(homeViewModel.menuItemsLiveData.observeAsState().value?.isEmpty() == true){
+//            homeViewModel.fetchMenuFromServer()
+//            menuItems.value = homeViewModel.menuItemsLiveData.observeAsState().value ?: emptyList()
+//        }
 
 
         val categories=menuItems.value.map {
