@@ -38,49 +38,11 @@ class MainActivity : ComponentActivity() {
         getSharedPreferences("LittleLemon", MODE_PRIVATE)
     }
 
-    private val homeViewModel:HomeViewModel by viewModels()
-
-//    private val client = HttpClient(Android) {
-//        install(ContentNegotiation) {
-//            json(contentType = ContentType("text", "plain"))
-//        }
-//    }
-
-//    private val database by lazy {
-//        Room.databaseBuilder(applicationContext, AppDatabase::class.java, "littleLemon.db").build()
-//    }
-
-
-//    private val menuItemsLiveData = MutableLiveData<List<MenuItemNetwork>>()
-
-//    private suspend fun getMenu(): List<MenuItemNetwork> {
-//        val response: MenuNetworkData =
-//            client.get("https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")
-//                .body()
-//        return response.menu ?: listOf();
-//    }
-
-//    private fun saveMenuToDatabase(menuItemsNetwork: List<MenuItemNetwork>) {
-//        val menuItemsRoom = menuItemsNetwork.map { it.toMenuItemRoom() }
-//        database.menuItemDao().insertAll(*menuItemsRoom.toTypedArray())
-//    }
+//    private val homeViewModel:HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         token.value = sharedPreferences.getString("userName", "");
-
-        lifecycleScope.launch(Dispatchers.IO) {
-//            if (database.menuItemDao().isEmpty()) {
-//                val items=getMenu();
-//                saveMenuToDatabase(items)
-//            }
-            if(homeViewModel.menuItemDao.isEmpty()){
-                val items=homeViewModel.fetchMenuFromServer()
-                homeViewModel.getMenuFromDataBase();
-            }
-        }
-
-
 
 
 

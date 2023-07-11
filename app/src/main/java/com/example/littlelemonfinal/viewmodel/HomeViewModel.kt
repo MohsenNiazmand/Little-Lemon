@@ -19,7 +19,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
     @Inject lateinit var menuItemDao: MenuItemDao
     private val error = MutableLiveData<String>()
     private val progressBarLiveData = MutableLiveData<Boolean>()
-    private val menuItemsLiveData=MutableLiveData<List<MenuItemNetwork>>()
+    val menuItemsLiveData=MutableLiveData<List<MenuItemNetwork>>()
     private val coroutineExceptionHandler= CoroutineExceptionHandler{ _, throwable ->
         error.postValue(throwable.message)
         progressBarLiveData.postValue(false)

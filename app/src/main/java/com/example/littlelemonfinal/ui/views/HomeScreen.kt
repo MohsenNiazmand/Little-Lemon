@@ -1,5 +1,7 @@
 package com.example.littlelemonfinal.ui.views
 
+import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,6 +32,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +47,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
@@ -58,26 +64,30 @@ import java.util.Locale
 import com.example.littlelemonfinal.model.services.AppDatabase
 import com.example.littlelemonfinal.ui.navigation.Profile
 import com.example.littlelemonfinal.ui.theme.CreamLight
+import com.example.littlelemonfinal.viewmodel.HomeViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    navController: NavController,
+    homeViewModel: HomeViewModel=hiltViewModel(),
+) {
     val mContext = LocalContext.current;
-
+    var menuItems = remember {
+        mutableStateOf(emptyList<MenuItemNetwork>())
+    }
     var searchText by remember { mutableStateOf("") }
-    val database by lazy {
-        Room.databaseBuilder(mContext, AppDatabase::class.java, "littleLemon.db").build()
-    }
+    val coroutineScope = rememberCoroutineScope()
 
 
 
-    val databaseMenuItems by database.menuItemDao().getAll().observeAsState(emptyList())
-    var menuItems = emptyList<MenuItemNetwork>()
-    menuItems = databaseMenuItems;
 
-    val categories=menuItems.map {
-        it.category
-    }
+
+
 
     Column(
         Modifier
@@ -85,7 +95,16 @@ fun HomeScreen(navController: NavController) {
             .background(color = Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+            menuItems.value= homeViewModel.getMenuFromDataBase().observeAsState().value ?: emptyList()
+        if(homeViewModel.menuItemsLiveData.observeAsState().value?.isEmpty() == true){
+            homeViewModel.fetchMenuFromServer()
+            menuItems.value = homeViewModel.menuItemsLiveData.observeAsState().value ?: emptyList()
+        }
 
+
+        val categories=menuItems.value.map {
+            it.category
+        }
         Surface(
             modifier = Modifier
                 .height(75.dp)
@@ -169,6 +188,7 @@ fun HomeScreen(navController: NavController) {
                 .height(120.dp)
         ) {
             Text(text = "ORDER FOR DELIVERY", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+
             Row(Modifier.horizontalScroll(rememberScrollState())) {
                 repeat(categories.size) {
                     var orderMenuItems by remember {
@@ -203,13 +223,13 @@ fun HomeScreen(navController: NavController) {
         }
 
         if (searchText.isNotEmpty()) {
-            val searchedItems = menuItems.filter {
+            val searchedItems = menuItems.value.filter {
                 it.title.lowercase(Locale.getDefault()).contains(searchText)
             }
             MenuItems(searchedItems)
 
         } else {
-            MenuItems(menuItems)
+            MenuItems(menuItems.value)
 
         }
 
@@ -257,10 +277,7 @@ fun MenuItems(dish: MenuItemNetwork) {
                 contentDescription = dish.title,
                 Modifier.clip(RoundedCornerShape(10.dp))
             )
-//            Image(
-//                painter = painterResource(id = dish.image),
-//                contentDescription = "",
-//            )
+
         }
     }
     Divider(
