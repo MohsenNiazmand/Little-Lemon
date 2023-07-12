@@ -23,15 +23,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository) : ViewModel() {
-    @Inject
-    lateinit var menuItemDao: MenuItemDao
-    private val error = MutableLiveData<String>()
-    private val progressBarLiveData = MutableLiveData<Boolean>()
-    val menuItemsLiveData = MutableLiveData<List<MenuItemNetwork>>()
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        error.postValue(throwable.message)
-        progressBarLiveData.postValue(false)
-    }
+//    @Inject
+//    lateinit var menuItemDao: MenuItemDao
+//    private val error = MutableLiveData<String>()
+//    private val progressBarLiveData = MutableLiveData<Boolean>()
+//    val menuItemsLiveData = MutableLiveData<List<MenuItemNetwork>>()
+//    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+//        error.postValue(throwable.message)
+//        progressBarLiveData.postValue(false)
+//    }
 
 
     private val state = MutableStateFlow<HomeScreenState>(HomeScreenState.Init)
@@ -50,6 +50,11 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
         state.value = HomeScreenState.ShowToast(message)
     }
 
+    init {
+        getMenuFromDataBase()
+        fetchMenuFromServer()
+    }
+
 
     fun getMenuFromDataBase() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -61,10 +66,10 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
                     hideLoading()
                     showToast(e.message.toString())
                 }
-                .collect { baseResult ->
+                .collect { menuItems ->
                     hideLoading()
-                    state.value = HomeScreenState.SuccessLoadFromDataBase(baseResult)
-                    if (baseResult.isEmpty()) {
+                    state.value = HomeScreenState.SuccessLoadFromDataBase(menuItems)
+                    if (menuItems.isEmpty()) {
                         state.value = HomeScreenState.ShowEmptyState(Unit)
                     }
 
@@ -110,4 +115,4 @@ sealed class HomeScreenState {
     data class SuccessLoadFromServer(val menuItems: List<MenuItemNetwork>) : HomeScreenState()
     data class SuccessLoadFromDataBase(val menuItems: List<MenuItemNetwork>) : HomeScreenState()
     data class ErrorLoad(val rawResponse: ErrorResponse) : HomeScreenState()
-}
+}}

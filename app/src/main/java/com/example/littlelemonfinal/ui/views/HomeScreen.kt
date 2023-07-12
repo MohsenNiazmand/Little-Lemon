@@ -97,16 +97,23 @@ fun HomeScreen(
     var searchText by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
-    val uiState: HomeScreenState by homeViewModel.mState.collectAsState()
+    val uiState: HomeScreenState = homeViewModel.mState.collectAsState().value
+
+
+//    HomeScreen(
+//        handleLocalMenu=
+//    )
 
     //todo
     when (uiState){
         is IsLoading -> println("loading")
         is ShowToast -> Toast.makeText(mContext, "Error Happened", Toast.LENGTH_SHORT).show()
         is ShowEmptyState -> {}
-        is SuccessLoadFromServer -> {}
-        is SuccessLoadFromDataBase ->{}
-        is ErrorLoad ->{}
+        is SuccessLoadFromServer -> menuItems.value=uiState.menuItems
+        is SuccessLoadFromDataBase ->menuItems.value= uiState.menuItems
+
+
+        is ErrorLoad ->Toast.makeText(mContext, "Error Happened", Toast.LENGTH_SHORT).show()
 
         else -> {}
     }
@@ -115,12 +122,8 @@ fun HomeScreen(
 
     }
 
-    fun getMenuFromDatabase(coroutineScope: CoroutineScope){
-
-        coroutineScope.launch {
-
-//            menuItems.value= homeViewModel.getMenuFromDataBase().observeAsState().value ?: emptyList()
-        }
+    fun handleLocalMenu(items :List<MenuItemNetwork> ){
+        menuItems.value=items
     }
 
     Column(
@@ -272,6 +275,8 @@ fun HomeScreen(
 
 
 }
+
+
 
 @Composable
 fun MenuItems(menuItemsRoom: List<MenuItemNetwork>) {
