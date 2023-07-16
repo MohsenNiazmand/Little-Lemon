@@ -23,16 +23,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository) : ViewModel() {
-//    @Inject
-//    lateinit var menuItemDao: MenuItemDao
-//    private val error = MutableLiveData<String>()
-//    private val progressBarLiveData = MutableLiveData<Boolean>()
-//    val menuItemsLiveData = MutableLiveData<List<MenuItemNetwork>>()
-//    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-//        error.postValue(throwable.message)
-//        progressBarLiveData.postValue(false)
-//    }
-
 
     private val state = MutableStateFlow<HomeScreenState>(HomeScreenState.Init)
     val mState: StateFlow<HomeScreenState> get() = state
@@ -76,7 +66,6 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
                 }
 
         }
-//        return homeRepository.loadMenuFromDatabase()
     }
 
     fun fetchMenuFromServer() {

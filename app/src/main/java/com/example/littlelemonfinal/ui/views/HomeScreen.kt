@@ -58,6 +58,7 @@ import androidx.room.Room
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.littlelemonfinal.R
+import com.example.littlelemonfinal.model.common.extension.showToast
 import com.example.littlelemonfinal.model.data.MenuItemNetwork
 import com.example.littlelemonfinal.ui.theme.GrayLight
 import com.example.littlelemonfinal.ui.theme.GreenGrayDark
@@ -92,35 +93,24 @@ fun HomeScreen(
     var menuItems = remember {
         mutableStateOf(emptyList<MenuItemNetwork>())
     }
-    //todo
-//    var menuItems: MutableStateFlow<List<MenuItemNetwork>>
     var searchText by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
     val uiState: HomeScreenState = homeViewModel.mState.collectAsState().value
 
 
-//    HomeScreen(
-//        handleLocalMenu=
-//    )
-
-    //todo
     when (uiState){
-        is IsLoading -> println("loading")
-        is ShowToast -> Toast.makeText(mContext, "Error Happened", Toast.LENGTH_SHORT).show()
+        is IsLoading -> mContext.showToast("Loading")
+        is ShowToast -> mContext.showToast(uiState.message)
         is ShowEmptyState -> {}
         is SuccessLoadFromServer -> menuItems.value=uiState.menuItems
         is SuccessLoadFromDataBase ->menuItems.value= uiState.menuItems
-
-
-        is ErrorLoad ->Toast.makeText(mContext, "Error Happened", Toast.LENGTH_SHORT).show()
+        is ErrorLoad ->mContext.showToast("Error Happened")
 
         else -> {}
     }
 
-    fun onBackClick(){
 
-    }
 
     fun handleLocalMenu(items :List<MenuItemNetwork> ){
         menuItems.value=items
@@ -132,11 +122,7 @@ fun HomeScreen(
             .background(color = Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//            menuItems.value= homeViewModel.getMenuFromDataBase().observeAsState().value ?: emptyList()
-//        if(homeViewModel.menuItemsLiveData.observeAsState().value?.isEmpty() == true){
-//            homeViewModel.fetchMenuFromServer()
-//            menuItems.value = homeViewModel.menuItemsLiveData.observeAsState().value ?: emptyList()
-//        }
+
 
 
         val categories=menuItems.value.map {
@@ -218,59 +204,56 @@ fun HomeScreen(
 
 
 
-        Column(
-            Modifier
-                .padding(start = 12.dp, end = 12.dp, top = 30.dp, bottom = 10.dp)
-                .fillMaxWidth()
-                .height(120.dp)
-        ) {
-            Text(text = "ORDER FOR DELIVERY", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Column(
+                Modifier
+                    .padding(start = 12.dp, end = 12.dp, top = 30.dp, bottom = 10.dp)
+                    .fillMaxWidth()
+                    .height(120.dp)
+            ) {
+                Text(text = "ORDER FOR DELIVERY", fontSize = 18.sp, fontWeight = FontWeight.Bold)
 
-            Row(Modifier.horizontalScroll(rememberScrollState())) {
-                repeat(categories.size) {
-                    var orderMenuItems by remember {
-                        mutableStateOf(false)
-                    }
+                Row(Modifier.horizontalScroll(rememberScrollState())) {
+                    repeat(categories.size) {
+                        var orderMenuItems by remember {
+                            mutableStateOf(false)
+                        }
 
-                    var categoryChecked by remember {
-                        mutableStateOf(false)
-                    }
-                    Box(
-                        Modifier
-                            .padding(end = 20.dp, top = 15.dp, bottom = 20.dp)
-                            .background(
-                                if (!categoryChecked) Color(0x36424644) else CreamLight,
-                                shape = RoundedCornerShape(15.dp)
+                        var categoryChecked by remember {
+                            mutableStateOf(false)
+                        }
+                        Box(
+                            Modifier
+                                .padding(end = 20.dp, top = 15.dp, bottom = 20.dp)
+                                .background(
+                                    if (!categoryChecked) Color(0x36424644) else CreamLight,
+                                    shape = RoundedCornerShape(15.dp)
+                                )
+                                .clickable {
+                                    categoryChecked = !categoryChecked;
+                                    orderMenuItems = false;
+                                }
+                        ) {
+                            Text(
+                                text =categories[it],
+                                modifier = Modifier.padding(8.dp),
+                                color = GreenGrayDark,
+                                fontWeight = FontWeight.Bold
                             )
-                            .clickable {
-                                categoryChecked = !categoryChecked;
-                                orderMenuItems = false;
-                            }
-                    ) {
-                        Text(
-                            text =categories[it],
-                            modifier = Modifier.padding(8.dp),
-                            color = GreenGrayDark,
-                            fontWeight = FontWeight.Bold
-                        )
+                        }
                     }
                 }
+                Divider(thickness = 1.dp, color = GrayLight)
             }
-            Divider(thickness = 1.dp, color = GrayLight)
-        }
+            if (searchText.isNotEmpty()) {
+                val searchedItems = menuItems.value.filter {
+                    it.title.lowercase(Locale.getDefault()).contains(searchText)
+                }
+                MenuItems(searchedItems)
 
-        if (searchText.isNotEmpty()) {
-            val searchedItems = menuItems.value.filter {
-                it.title.lowercase(Locale.getDefault()).contains(searchText)
+            } else {
+                MenuItems(menuItems.value)
+
             }
-            MenuItems(searchedItems)
-
-        } else {
-            MenuItems(menuItems.value)
-
-        }
-
-
     }
 
 

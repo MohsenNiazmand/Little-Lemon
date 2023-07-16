@@ -47,7 +47,8 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            LittleLemonTheme {
+            LittleLemonTheme(darkTheme = false) {
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
