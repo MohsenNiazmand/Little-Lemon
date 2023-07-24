@@ -22,4 +22,8 @@ class HomeRepositoryImpl @Inject constructor(
     override fun loadMenuFromDatabase(): Flow<List<MenuItemNetwork>> {
         return homeLocalDataSource.loadMenuFromDatabase()
     }
+
+    override fun saveMenuToDatabase(menuItems:List<MenuItemNetwork>) {
+        return homeLocalDataSource.saveMenuToDatabase(menuItems)
+    }
 }

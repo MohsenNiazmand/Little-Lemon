@@ -34,7 +34,6 @@ class HomeRemoteDataSource @Inject constructor(
 
                 emit(BaseResult.Success(body.menu))
 
-
             } else {
                 val error: Reader = response.body()
                 val type = object : TypeToken<ErrorResponse>() {}.type
@@ -47,6 +46,10 @@ class HomeRemoteDataSource @Inject constructor(
     }
 
     override fun loadMenuFromDatabase(): Flow<List<MenuItemNetwork>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun saveMenuToDatabase(menuItems: List<MenuItemNetwork>) {
         TODO("Not yet implemented")
     }
 }

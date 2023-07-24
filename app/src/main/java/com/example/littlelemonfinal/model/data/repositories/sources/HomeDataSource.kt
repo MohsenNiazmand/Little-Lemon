@@ -12,5 +12,5 @@ interface HomeDataSource {
 
     suspend fun fetchMenuItems(): Flow<BaseResult<List<MenuItemNetwork>, ErrorResponse>>
     fun loadMenuFromDatabase() : Flow<List<MenuItemNetwork>>
-
+    fun saveMenuToDatabase(menuItems: List<MenuItemNetwork>) : Unit
 }

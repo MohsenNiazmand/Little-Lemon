@@ -1,8 +1,8 @@
 package com.example.littlelemonfinal.ui.views
 
 import android.annotation.SuppressLint
-import android.view.Menu
-import android.widget.Toast
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,8 +20,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.ProgressIndicatorDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -31,11 +33,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,10 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.littlelemonfinal.R
@@ -65,22 +63,15 @@ import com.example.littlelemonfinal.ui.theme.GreenGrayDark
 import com.example.littlelemonfinal.ui.theme.White
 import com.example.littlelemonfinal.ui.theme.Yellow
 import java.util.Locale
-import com.example.littlelemonfinal.model.services.AppDatabase
 import com.example.littlelemonfinal.ui.navigation.Profile
 import com.example.littlelemonfinal.ui.theme.CreamLight
 import com.example.littlelemonfinal.viewmodel.HomeViewModel
 import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState
 import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.ErrorLoad
-import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.IsLoading
 import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.ShowEmptyState
 import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.ShowToast
 import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.SuccessLoadFromDataBase
 import com.example.littlelemonfinal.viewmodel.HomeViewModel.HomeScreenState.SuccessLoadFromServer
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -96,11 +87,12 @@ fun HomeScreen(
     var searchText by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
-    val uiState: HomeScreenState = homeViewModel.mState.collectAsState().value
+//    val mState : HomeScreenState by homeViewModel.homeViewState.collectAsStateWithLifecycle()
+    val uiState: HomeScreenState = homeViewModel.homeViewState.collectAsState().value
+    val isLoading by homeViewModel.isLoading.collectAsState()
 
 
     when (uiState){
-        is IsLoading -> mContext.showToast("Loading")
         is ShowToast -> mContext.showToast(uiState.message)
         is ShowEmptyState -> {}
         is SuccessLoadFromServer -> menuItems.value=uiState.menuItems
@@ -201,9 +193,16 @@ fun HomeScreen(
         }
 
 
-
-
-
+        if(isLoading){
+            Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                AnimatedVisibility(visible = isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+            }
+        }else{
             Column(
                 Modifier
                     .padding(start = 12.dp, end = 12.dp, top = 30.dp, bottom = 10.dp)
@@ -254,6 +253,7 @@ fun HomeScreen(
                 MenuItems(menuItems.value)
 
             }
+        }
     }
 
 

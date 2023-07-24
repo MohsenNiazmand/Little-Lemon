@@ -16,4 +16,8 @@ class HomeLocalDataSource @Inject constructor(private val menuItemDao: MenuItemD
     override fun loadMenuFromDatabase():  Flow<List<MenuItemNetwork>> {
        return  menuItemDao.getAll();
     }
+
+    override fun saveMenuToDatabase(menuItems: List<MenuItemNetwork>) {
+        menuItemDao.insertAll(menuItems)
+    }
 }

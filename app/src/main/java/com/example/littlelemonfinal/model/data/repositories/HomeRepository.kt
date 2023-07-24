@@ -11,4 +11,5 @@ import kotlinx.coroutines.flow.Flow
 interface HomeRepository {
     suspend fun fetchMenuItems(): Flow<BaseResult<List<MenuItemNetwork>, ErrorResponse>>
     fun loadMenuFromDatabase() : Flow<List<MenuItemNetwork>>
+    fun saveMenuToDatabase( menuItems: List<MenuItemNetwork>) : Unit
 }
